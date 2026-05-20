@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello, World — slide.kevinprk.com</title>
+  <title>Slide — kevinprk.com</title>
   <style>
     @import url("https://rsms.me/inter/inter.css");
     @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
 
     :root {
-      --kp-white:  #ffffff;
+      --kp-white:    #ffffff;
       --kp-gray-50:  #fafafa;
       --kp-gray-100: #f4f4f4;
       --kp-gray-200: #e8e8e8;
@@ -17,11 +17,13 @@
       --kp-gray-400: #a3a3a3;
       --kp-gray-500: #737373;
       --kp-gray-600: #525252;
+      --kp-gray-700: #404040;
       --kp-gray-800: #262626;
       --kp-gray-900: #171717;
       --kp-black:    #0a0a0a;
 
       --kp-bg:        var(--kp-white);
+      --kp-bg-subtle: var(--kp-gray-50);
       --kp-bg-muted:  var(--kp-gray-100);
       --kp-fg:        var(--kp-black);
       --kp-fg-1:      var(--kp-gray-900);
@@ -29,6 +31,7 @@
       --kp-fg-3:      var(--kp-gray-500);
       --kp-fg-4:      var(--kp-gray-400);
       --kp-border:    var(--kp-gray-200);
+      --kp-border-strong: var(--kp-gray-300);
 
       --kp-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
       --kp-font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -36,155 +39,610 @@
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --kp-bg:       var(--kp-black);
-        --kp-bg-muted: var(--kp-gray-800);
-        --kp-fg:       var(--kp-gray-50);
-        --kp-fg-1:     var(--kp-gray-100);
-        --kp-fg-2:     var(--kp-gray-400);
-        --kp-fg-3:     var(--kp-gray-500);
-        --kp-fg-4:     var(--kp-gray-600);
-        --kp-border:   #2a2a2a;
+        --kp-bg:        var(--kp-black);
+        --kp-bg-subtle: var(--kp-gray-900);
+        --kp-bg-muted:  var(--kp-gray-800);
+        --kp-fg:        var(--kp-gray-50);
+        --kp-fg-1:      var(--kp-gray-100);
+        --kp-fg-2:      var(--kp-gray-400);
+        --kp-fg-3:      var(--kp-gray-500);
+        --kp-fg-4:      var(--kp-gray-600);
+        --kp-border:    #2a2a2a;
+        --kp-border-strong: #3a3a3a;
       }
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
+      overflow: hidden;
       font-family: var(--kp-font-sans);
       background: var(--kp-bg);
       color: var(--kp-fg-1);
       -webkit-font-smoothing: antialiased;
+      user-select: none;
     }
 
-    .slide {
-      width: 100%;
-      height: 100%;
+    /* ── Deck shell ── */
+    .deck {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    /* ── Individual pages ── */
+    .page {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
-      padding: 64px 72px;
+      padding: 56px 72px 48px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(40px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
     }
 
-    .slide-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: auto;
+    .page.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
     }
 
-    .pi-mark {
-      width: 24px;
-      height: 24px;
-      background: var(--kp-fg);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .page.exit {
+      opacity: 0;
+      transform: translateX(-40px);
     }
 
-    .pi-mark span {
-      font-family: var(--kp-font-sans);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--kp-bg);
-      line-height: 1;
-    }
-
-    .slide-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .label {
-      font-family: var(--kp-font-mono);
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--kp-fg-4);
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: clamp(40px, 6vw, 64px);
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      color: var(--kp-fg);
-      margin-bottom: 20px;
-    }
-
-    .subtitle {
-      font-size: clamp(15px, 2vw, 20px);
-      color: var(--kp-fg-3);
-      font-weight: 400;
-      line-height: 1.5;
-      max-width: 520px;
-    }
-
-    .meta-row {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-top: 48px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border: 1px solid var(--kp-border);
-      border-radius: 4px;
-      font-family: var(--kp-font-mono);
-      font-size: 11px;
-      color: var(--kp-fg-3);
-      letter-spacing: -0.005em;
-    }
-
-    .slide-footer {
+    /* ── Chrome shared ── */
+    .chrome {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
 
-    .footer-pi {
-      font-family: var(--kp-font-sans);
-      font-size: 13px;
-      color: var(--kp-fg-4);
+    .pi-mark {
+      width: 24px; height: 24px;
+      background: var(--kp-fg);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pi-mark span {
+      font-size: 14px; font-weight: 500;
+      color: var(--kp-bg); line-height: 1;
     }
 
-    .page-num {
+    .page-label {
       font-family: var(--kp-font-mono);
       font-size: 11px;
       color: var(--kp-fg-4);
+      letter-spacing: 0.04em;
+    }
+
+    .body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .footer-pi { font-size: 13px; color: var(--kp-fg-4); }
+    .nav-dots {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .nav-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--kp-border-strong);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .nav-dot.active { background: var(--kp-fg); }
+
+    /* ── Shared type ── */
+    .eyebrow {
+      font-family: var(--kp-font-mono);
+      font-size: 11px; letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--kp-fg-4);
+    }
+
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px;
+      border: 1px solid var(--kp-border);
+      border-radius: 4px;
+      font-family: var(--kp-font-mono);
+      font-size: 11px; color: var(--kp-fg-3);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--kp-border);
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE 1 — Cover
+    ───────────────────────────────────────── */
+    #p1 .body {
+      justify-content: flex-end;
+      padding-bottom: 16px;
+    }
+
+    #p1 .overline {
+      font-family: var(--kp-font-mono);
+      font-size: 12px; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--kp-fg-4);
+      margin-bottom: 24px;
+    }
+
+    #p1 h1 {
+      font-size: clamp(52px, 7.5vw, 80px);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.0;
+      color: var(--kp-fg);
+      margin-bottom: 24px;
+    }
+
+    #p1 .sub {
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--kp-fg-3);
+      line-height: 1.55;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+
+    #p1 .meta-row {
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE 2 — Feature list
+    ───────────────────────────────────────── */
+    #p2 .body { justify-content: center; gap: 40px; }
+
+    #p2 h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 600; letter-spacing: -0.025em;
+      color: var(--kp-fg); line-height: 1.1;
+    }
+
+    #p2 .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    #p2 .feature {
+      padding: 28px 0;
+      border-top: 1px solid var(--kp-border);
+      padding-right: 40px;
+    }
+
+    #p2 .feature:nth-child(even) { padding-right: 0; padding-left: 40px; border-left: 1px solid var(--kp-border); }
+
+    #p2 .feature-num {
+      font-family: var(--kp-font-mono);
+      font-size: 11px; color: var(--kp-fg-4);
+      letter-spacing: 0.04em; margin-bottom: 12px;
+    }
+
+    #p2 .feature-title {
+      font-size: 16px; font-weight: 500;
+      color: var(--kp-fg); margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    #p2 .feature-desc {
+      font-size: 13px; color: var(--kp-fg-3);
+      line-height: 1.55;
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE 3 — Workflow
+    ───────────────────────────────────────── */
+    #p3 .body { justify-content: center; gap: 44px; }
+
+    #p3 h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 600; letter-spacing: -0.025em;
+      color: var(--kp-fg); line-height: 1.1;
+    }
+
+    #p3 .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    #p3 .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px 28px;
+      border: 1px solid var(--kp-border);
+      border-right: none;
+      position: relative;
+    }
+
+    #p3 .step:first-child { border-radius: 6px 0 0 6px; }
+    #p3 .step:last-child  { border-radius: 0 6px 6px 0; border-right: 1px solid var(--kp-border); }
+
+    #p3 .step-arrow {
+      position: absolute;
+      right: -13px; top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      width: 24px; height: 24px;
+      background: var(--kp-bg);
+      border: 1px solid var(--kp-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #p3 .step-arrow svg { color: var(--kp-fg-4); }
+
+    #p3 .step-num {
+      font-family: var(--kp-font-mono);
+      font-size: 10px; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--kp-fg-4);
+    }
+
+    #p3 .step-title {
+      font-size: 14px; font-weight: 500;
+      color: var(--kp-fg); letter-spacing: -0.01em;
+    }
+
+    #p3 .step-body {
+      font-size: 12px; color: var(--kp-fg-3);
+      line-height: 1.55; flex: 1;
+    }
+
+    #p3 .step-code {
+      font-family: var(--kp-font-mono);
+      font-size: 11px; color: var(--kp-fg-3);
+      background: var(--kp-bg-muted);
+      padding: 6px 10px; border-radius: 4px;
+      letter-spacing: -0.005em;
+    }
+
+    #p3 .note {
+      font-size: 13px; color: var(--kp-fg-4);
+      line-height: 1.5;
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE 4 — Typography specimen
+    ───────────────────────────────────────── */
+    #p4 .body { justify-content: center; gap: 32px; }
+
+    #p4 h2 {
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 600; letter-spacing: -0.025em;
+      color: var(--kp-fg); line-height: 1.1;
+    }
+
+    #p4 .specimen {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    #p4 .spec-row {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      padding: 16px 0;
+      border-top: 1px solid var(--kp-border);
+    }
+
+    #p4 .spec-row:last-child { border-bottom: 1px solid var(--kp-border); }
+
+    #p4 .spec-meta {
+      width: 120px;
+      flex-shrink: 0;
+      font-family: var(--kp-font-mono);
+      font-size: 10px; color: var(--kp-fg-4);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    #p4 .spec-sample { flex: 1; color: var(--kp-fg); }
+    #p4 .spec-sample.dim { color: var(--kp-fg-3); }
+
+    #p4 .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    #p4 .col-block {
+      padding: 20px 24px;
+      border: 1px solid var(--kp-border);
+      border-radius: 6px;
+    }
+
+    #p4 .col-label {
+      font-family: var(--kp-font-mono);
+      font-size: 10px; color: var(--kp-fg-4);
+      letter-spacing: 0.05em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    #p4 .col-body { font-size: 13px; color: var(--kp-fg-2); line-height: 1.6; }
+    #p4 .col-mono { font-family: var(--kp-font-mono); font-size: 12px; color: var(--kp-fg-3); line-height: 1.7; }
+
+    /* ─────────────────────────────────────────
+       PAGE 5 — Closing
+    ───────────────────────────────────────── */
+    #p5 .body {
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
+    }
+
+    #p5 .big-pi {
+      font-size: clamp(80px, 12vw, 120px);
+      font-weight: 400;
+      color: var(--kp-fg);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    #p5 .closing-text {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--kp-fg);
+      line-height: 1.2;
+      max-width: 400px;
+    }
+
+    #p5 .closing-sub {
+      font-size: 14px;
+      color: var(--kp-fg-3);
+      line-height: 1.6;
+      max-width: 380px;
+    }
+
+    #p5 .url {
+      font-family: var(--kp-font-mono);
+      font-size: 12px;
+      color: var(--kp-fg-4);
+      letter-spacing: -0.005em;
     }
   </style>
 </head>
 <body>
-  <div class="slide">
-    <div class="slide-header">
-      <div class="pi-mark"><span>π</span></div>
-    </div>
+<div class="deck" id="deck">
 
-    <div class="slide-content">
-      <p class="label">slide.kevinprk.com</p>
-      <h1>Hello,<br>World.</h1>
-      <p class="subtitle">
-        A sample slide to verify the setup and confirm the design system is working correctly.
-      </p>
+  <!-- ── PAGE 1: Cover ── -->
+  <div class="page active" id="p1">
+    <div class="chrome">
+      <div class="pi-mark"><span>π</span></div>
+      <span class="page-label">01 / 05</span>
+    </div>
+    <div class="body">
+      <p class="overline">slide.kevinprk.com</p>
+      <h1>Personal<br>Slide Deck.</h1>
+      <p class="sub">A minimal slide service for publishing HTML/CSS presentations. Slides are written by Claude and deployed via Git.</p>
       <div class="meta-row">
         <span class="tag">kevinprk design system</span>
         <span class="tag">2026-05-20</span>
+        <span class="tag">Kevin Park</span>
       </div>
     </div>
-
-    <div class="slide-footer">
+    <div class="footer">
       <span class="footer-pi">π</span>
-      <span class="page-num">01</span>
+      <div class="nav-dots" id="dots"></div>
     </div>
   </div>
+
+  <!-- ── PAGE 2: Features ── -->
+  <div class="page" id="p2">
+    <div class="chrome">
+      <div class="pi-mark"><span>π</span></div>
+      <span class="page-label">02 / 05</span>
+    </div>
+    <div class="body">
+      <h2>What it does.</h2>
+      <div class="features">
+        <div class="feature">
+          <p class="feature-num">01</p>
+          <p class="feature-title">List &amp; Browse</p>
+          <p class="feature-desc">All slides are indexed in a manifest and presented as a browsable card grid at the root of the service.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-num">02</p>
+          <p class="feature-title">Full-screen Viewer</p>
+          <p class="feature-desc">Each slide opens in a full-viewport iframe — no chrome, no distractions. Direct link opens raw HTML.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-num">03</p>
+          <p class="feature-title">Claude-generated</p>
+          <p class="feature-desc">Slides are created with <span style="font-family:var(--kp-font-mono);font-size:11px">/new-slide</span> — Claude writes the HTML/CSS following the design system spec.</p>
+        </div>
+        <div class="feature">
+          <p class="feature-num">04</p>
+          <p class="feature-title">Git-deployed</p>
+          <p class="feature-desc">Commit the generated file, push to main. GitHub Actions builds and ArgoCD syncs the cluster within minutes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-pi">π</span>
+      <div class="nav-dots" id="dots2"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE 3: Workflow ── -->
+  <div class="page" id="p3">
+    <div class="chrome">
+      <div class="pi-mark"><span>π</span></div>
+      <span class="page-label">03 / 05</span>
+    </div>
+    <div class="body">
+      <h2>How it works.</h2>
+      <div class="flow">
+        <div class="step">
+          <p class="step-num">01</p>
+          <p class="step-title">Run the skill</p>
+          <p class="step-body">Open Claude Code inside the slide repo. Invoke the slash command.</p>
+          <p class="step-code">/new-slide My Talk</p>
+          <div class="step-arrow">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="step">
+          <p class="step-num">02</p>
+          <p class="step-title">Claude generates</p>
+          <p class="step-body">Claude writes a self-contained HTML file and updates the manifest index.</p>
+          <p class="step-code">public/slides/my-talk.html</p>
+          <div class="step-arrow">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="step">
+          <p class="step-num">03</p>
+          <p class="step-title">Commit &amp; push</p>
+          <p class="step-body">Push to main. CI builds the Docker image and updates the deployment tag.</p>
+          <p class="step-code">git push origin main</p>
+          <div class="step-arrow">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="step">
+          <p class="step-num">04</p>
+          <p class="step-title">Live in ~3 min</p>
+          <p class="step-body">ArgoCD detects the new image tag and syncs the cluster automatically.</p>
+          <p class="step-code">slide.kevinprk.com</p>
+        </div>
+      </div>
+      <p class="note">Stack: Vite + React (list/viewer) · Nginx (static) · k8s + ArgoCD (deploy) · GitHub Actions (CI)</p>
+    </div>
+    <div class="footer">
+      <span class="footer-pi">π</span>
+      <div class="nav-dots" id="dots3"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE 4: Design specimen ── -->
+  <div class="page" id="p4">
+    <div class="chrome">
+      <div class="pi-mark"><span>π</span></div>
+      <span class="page-label">04 / 05</span>
+    </div>
+    <div class="body">
+      <h2>Design system.</h2>
+      <div class="specimen">
+        <div class="spec-row">
+          <span class="spec-meta">Display · 600</span>
+          <span class="spec-sample" style="font-size:36px;font-weight:600;letter-spacing:-0.03em;line-height:1">Kevin Park</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-meta">Heading · 500</span>
+          <span class="spec-sample" style="font-size:22px;font-weight:500;letter-spacing:-0.02em">Personal slide publishing</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-meta">Body · 400</span>
+          <span class="spec-sample dim" style="font-size:15px;line-height:1.55">Slides are written by Claude, committed to Git, and deployed via ArgoCD. Pure HTML and CSS — no framework.</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-meta">Mono · 400</span>
+          <span class="spec-sample" style="font-family:var(--kp-font-mono);font-size:13px;color:var(--kp-fg-3)">/new-slide · manifest.json · public/slides/</span>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="col-block">
+          <p class="col-label">Sans — Inter</p>
+          <p class="col-body">Minimal. No gradients, no blobs, no colored accents. Pure neutral ink on paper — the brand is the type.</p>
+        </div>
+        <div class="col-block">
+          <p class="col-label">Mono — JetBrains Mono</p>
+          <p class="col-mono">--kp-gray-900: #171717<br>--kp-font-sans: "Inter"<br>--kp-space-5: 24px</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="footer-pi">π</span>
+      <div class="nav-dots" id="dots4"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE 5: Closing ── -->
+  <div class="page" id="p5">
+    <div class="chrome">
+      <div class="pi-mark"><span>π</span></div>
+      <span class="page-label">05 / 05</span>
+    </div>
+    <div class="body">
+      <div class="big-pi">π</div>
+      <p class="closing-text">That's the slide service.</p>
+      <p class="closing-sub">Write slides with Claude. Ship them with Git. Browse them here. No editor, no CMS, no build config beyond a single HTML file.</p>
+      <p class="url">slide.kevinprk.com · krapie/slide</p>
+    </div>
+    <div class="footer">
+      <span class="footer-pi">π</span>
+      <div class="nav-dots" id="dots5"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const total = pages.length;
+  let current = 0;
+
+  function allDotContainers() {
+    return document.querySelectorAll('[id^="dots"]');
+  }
+
+  function renderDots() {
+    allDotContainers().forEach(container => {
+      container.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'nav-dot' + (i === current ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', e => { e.stopPropagation(); goTo(i); });
+        container.appendChild(dot);
+      }
+    });
+  }
+
+  function goTo(idx) {
+    if (idx === current) return;
+    pages[current].classList.remove('active');
+    pages[current].classList.add('exit');
+    const prev = current;
+    current = Math.max(0, Math.min(total - 1, idx));
+    pages[current].classList.add('active');
+    setTimeout(() => pages[prev].classList.remove('exit'), 300);
+    renderDots();
+  }
+
+  function next() { if (current < total - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); prev(); }
+  });
+
+  document.getElementById('deck').addEventListener('click', next);
+
+  renderDots();
+</script>
 </body>
 </html>
