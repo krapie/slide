@@ -47,6 +47,7 @@ The generated HTML file must follow these rules exactly:
 - Use `.label` (mono uppercase) above the title for category/context
 - Use `.meta-row` with `.tag` pills for metadata (topic tags, date, etc.)
 - Multi-page decks: use JavaScript to navigate between `.page` sections (optional)
+- **Always** end the `<script>` block with `document.body.tabIndex = -1; document.body.focus({ preventScroll: true });` so arrow-key navigation works on page load without requiring a click first
 
 ## manifest.json entry format
 

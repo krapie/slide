@@ -643,6 +643,8 @@
   document.getElementById('deck').addEventListener('click', next);
 
   renderDots();
+  document.body.tabIndex = -1;
+  document.body.focus({ preventScroll: true });
 </script>
 </body>
 </html>
