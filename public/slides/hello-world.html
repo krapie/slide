@@ -435,7 +435,7 @@
     <div class="body">
       <p class="overline">slide.kevinprk.com</p>
       <h1>Personal<br>Slide Deck.</h1>
-      <p class="sub">A minimal slide service for publishing HTML/CSS presentations. Slides are written by Claude and deployed via Git.</p>
+      <p class="sub">A minimal slide service for publishing HTML/CSS presentations. Slides are version-controlled as code and deployed via Git.</p>
       <div class="meta-row">
         <span class="tag">kevinprk design system</span>
         <span class="tag">2026-05-20</span>
@@ -469,8 +469,8 @@
         </div>
         <div class="feature">
           <p class="feature-num">03</p>
-          <p class="feature-title">Claude-generated</p>
-          <p class="feature-desc">Slides are created with <span style="font-family:var(--kp-font-mono);font-size:11px">/new-slide</span> — Claude writes the HTML/CSS following the design system spec.</p>
+          <p class="feature-title">Code-first</p>
+          <p class="feature-desc">Each slide is a standalone HTML/CSS file generated from a slash command and committed directly to the repository.</p>
         </div>
         <div class="feature">
           <p class="feature-num">04</p>
@@ -496,8 +496,8 @@
       <div class="flow">
         <div class="step">
           <p class="step-num">01</p>
-          <p class="step-title">Run the skill</p>
-          <p class="step-body">Open Claude Code inside the slide repo. Invoke the slash command.</p>
+          <p class="step-title">Run the command</p>
+          <p class="step-body">Open the slide repo and run the slash command to scaffold a new slide.</p>
           <p class="step-code">/new-slide My Talk</p>
           <div class="step-arrow">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -505,8 +505,8 @@
         </div>
         <div class="step">
           <p class="step-num">02</p>
-          <p class="step-title">Claude generates</p>
-          <p class="step-body">Claude writes a self-contained HTML file and updates the manifest index.</p>
+          <p class="step-title">File generated</p>
+          <p class="step-body">A self-contained HTML/CSS file is created and the manifest index is updated.</p>
           <p class="step-code">public/slides/my-talk.html</p>
           <div class="step-arrow">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -555,7 +555,7 @@
         </div>
         <div class="spec-row">
           <span class="spec-meta">Body · 400</span>
-          <span class="spec-sample dim" style="font-size:15px;line-height:1.55">Slides are written by Claude, committed to Git, and deployed via ArgoCD. Pure HTML and CSS — no framework.</span>
+          <span class="spec-sample dim" style="font-size:15px;line-height:1.55">Pure HTML and CSS — committed to Git and deployed via ArgoCD. No framework, no CMS, no runtime dependencies.</span>
         </div>
         <div class="spec-row">
           <span class="spec-meta">Mono · 400</span>
@@ -588,7 +588,7 @@
     <div class="body">
       <div class="big-pi">π</div>
       <p class="closing-text">That's the slide service.</p>
-      <p class="closing-sub">Write slides with Claude. Ship them with Git. Browse them here. No editor, no CMS, no build config beyond a single HTML file.</p>
+      <p class="closing-sub">Compose in HTML. Ship with Git. Browse here. No editor, no CMS, no build config beyond a single HTML file.</p>
       <p class="url">slide.kevinprk.com · krapie/slide</p>
     </div>
     <div class="footer">
