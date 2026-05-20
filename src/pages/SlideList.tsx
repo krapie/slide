@@ -82,7 +82,17 @@ export default function SlideList() {
                       sandbox="allow-same-origin"
                       tabIndex={-1}
                       title={`${slide.title} preview`}
-                      style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none', display: 'block' }}
+                      style={{
+                        position: 'absolute',
+                        top: 0, left: 0,
+                        width: '400%',
+                        height: '400%',
+                        transform: 'scale(0.25)',
+                        transformOrigin: 'top left',
+                        border: 'none',
+                        pointerEvents: 'none',
+                        display: 'block',
+                      }}
                     />
                   </div>
                   <div style={cardBodyStyle}>
@@ -178,6 +188,7 @@ const cardStyle: React.CSSProperties = {
 }
 
 const cardPreviewStyle: React.CSSProperties = {
+  position: 'relative',
   aspectRatio: '16 / 9',
   overflow: 'hidden',
   borderBottom: '1px solid var(--kp-border)',
