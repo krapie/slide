@@ -77,9 +77,13 @@ export default function SlideList() {
                   onMouseLeave={e => (e.currentTarget.style.background = 'var(--kp-surface)')}
                 >
                   <div style={cardPreviewStyle}>
-                    <span style={{ fontFamily: 'var(--kp-font-mono)', fontSize: 'var(--kp-text-xs)', color: 'var(--kp-fg-4)' }}>
-                      {slide.slug}.html
-                    </span>
+                    <iframe
+                      src={`/slides/${slide.slug}.html`}
+                      sandbox="allow-same-origin"
+                      tabIndex={-1}
+                      title={`${slide.title} preview`}
+                      style={{ width: '100%', height: '100%', border: 'none', pointerEvents: 'none', display: 'block' }}
+                    />
                   </div>
                   <div style={cardBodyStyle}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--kp-space-3)' }}>
@@ -174,12 +178,10 @@ const cardStyle: React.CSSProperties = {
 }
 
 const cardPreviewStyle: React.CSSProperties = {
-  height: 120,
-  background: 'var(--kp-bg-muted)',
+  aspectRatio: '16 / 9',
+  overflow: 'hidden',
   borderBottom: '1px solid var(--kp-border)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  background: 'var(--kp-bg-muted)',
 }
 
 const cardBodyStyle: React.CSSProperties = {
